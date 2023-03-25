@@ -3,6 +3,8 @@ using Classifieds.Data.Entities;
 using Classifieds.Web.Constants;
 using Classifieds.Web.Services;
 using Classifieds.Web.Services.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -67,7 +69,18 @@ namespace Classifieds.Web
                     policy.RequireClaim(UserClaims.isMinimumAge, "true"));
             });
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddMvcOptions(q => q.Filters.Add(new AuthorizeFilter()));
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+                .AddCookie(q => q.LoginPath = "/Auth/Login")
+                .AddGoogle(o => { o.ClientId = Configuration["Google:ClientId"]; o.ClientSecret = Configuration["Google:ClienteSecret"]; })
+                //.AddTwitter(o => { o.ConsumerKey = ""; o.ConsumerSecret = ""; })
+                //.AddFacebook(o => { o.ClientId = ""; o.ClientSecret = ""; })
+                //.AddMicrosoftAccount(o => { o.ClientId = ""; o.ClientSecret = ""; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
