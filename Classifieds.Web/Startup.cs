@@ -74,7 +74,7 @@ namespace Classifieds.Web
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                //o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
                 .AddCookie(q => q.LoginPath = "/Auth/Login")
                 .AddGoogle(o => { o.ClientId = Configuration["Google:ClientId"]; o.ClientSecret = Configuration["Google:ClienteSecret"]; })
